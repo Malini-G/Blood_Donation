@@ -1,20 +1,47 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'donor_page.dart';
 import 'blood_bank_page.dart';
 import 'general_info_page.dart';
-import 'Progress_Page.dart';
+import 'Progress_Page.dart'; // Make sure this filename and class name matches
 
-class DashboardPage extends StatelessWidget {
+class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
+
+  @override
+  State<DashboardPage> createState() => _DashboardPageState();
+}
+
+class _DashboardPageState extends State<DashboardPage> {
+  String userName = 'User';
+  String bloodGroup = '';
+  String email = '';
+  String phone = '';
+
+  @override
+  void initState() {
+    super.initState();
+    loadUserData();
+  }
+
+  Future<void> loadUserData() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      userName = prefs.getString('name') ?? 'User';
+      bloodGroup = prefs.getString('bloodGroup') ?? '';
+      email = prefs.getString('email') ?? '';
+      phone = prefs.getString('phone') ?? '';
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.red,
-        title: const Text(
-          'Welcome, [UserName]',
-          style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+        title: Text(
+          'Welcome, $userName',
+          style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
         ),
       ),
       body: Padding(
@@ -28,14 +55,12 @@ class DashboardPage extends StatelessWidget {
             _buildCard(context, Icons.event, 'Events'),
             _buildCard(context, Icons.bloodtype, 'Donors List'),
             _buildCard(context, Icons.info, 'General Info'),
-            _buildCard(context, Icons.settings, 'Profile Settings'),
           ],
         ),
       ),
     );
   }
 
-  // Function to build individual cards with context and label-based navigation
   Widget _buildCard(BuildContext context, IconData icon, String label) {
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
@@ -53,22 +78,19 @@ class DashboardPage extends StatelessWidget {
               MaterialPageRoute(builder: (context) => const BloodBankPage()),
             );
           } else if (label == 'General Info') {
-            // Navigate to the General Info page when the General Info card is tapped
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => const GeneralInfoPage()),
             );
           } else if (label == 'Events') {
-            // Navigate to the Progress Page with donors data
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder:
-                    (context) =>
-                        ProgressPage(donorsData: []), // Pass donors data here
+                builder: (context) => const ProgressPage(), // ✅ FIXED
               ),
             );
           }
+          // Add Profile Settings logic if needed
         },
         child: Container(
           decoration: BoxDecoration(

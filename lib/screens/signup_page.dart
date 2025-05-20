@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import '../services/auth_service.dart'; // Make sure this import is correct
+import 'package:shared_preferences/shared_preferences.dart';
+import '../services/auth_service.dart';
+import '../services/shared_service.dart'; // Import shared service
 
 class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
@@ -20,15 +22,14 @@ class _SignupPageState extends State<SignupPage> {
   DateTime? birthDate;
 
   Future<void> signup() async {
-    String name = firstNameController.text;
-    String phone = phoneController.text;
-    String email = emailController.text;
-    String address = addressController.text;
+    String name = firstNameController.text.trim();
+    String phone = phoneController.text.trim();
+    String email = emailController.text.trim();
+    String address = addressController.text.trim();
     String password = passwordController.text;
     String confirmPassword = confirmPasswordController.text;
 
     if (password != confirmPassword) {
-      // Show error message if passwords don't match
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(const SnackBar(content: Text("Passwords do not match!")));
@@ -43,7 +44,6 @@ class _SignupPageState extends State<SignupPage> {
         bloodGroup == null ||
         birthDate == null ||
         password.isEmpty) {
-      // Validate all fields
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Please fill out all fields!")),
       );
@@ -65,19 +65,28 @@ class _SignupPageState extends State<SignupPage> {
       );
 
       if (result['message'] == 'Signup successful') {
-        // Show success message and navigate to login or dashboard
+        // Save to shared preferences
+        await SharedService.saveUserData(
+          name: name,
+          phone: phone,
+          email: email,
+          address: address,
+          gender: gender!,
+          bloodGroup: bloodGroup!,
+          dob: dob,
+        );
+
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(const SnackBar(content: Text("Signup successful!")));
+
         Navigator.pushReplacementNamed(context, '/login');
       } else {
-        // Show error message if signup failed
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(SnackBar(content: Text(result['message'])));
       }
     } catch (error) {
-      // Handle any errors from the backend
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text('Error: $error')));
@@ -95,6 +104,7 @@ class _SignupPageState extends State<SignupPage> {
             TextField(
               controller: phoneController,
               decoration: const InputDecoration(labelText: 'Phone'),
+              keyboardType: TextInputType.phone,
             ),
             const SizedBox(height: 10),
             TextField(
@@ -105,6 +115,7 @@ class _SignupPageState extends State<SignupPage> {
             TextField(
               controller: emailController,
               decoration: const InputDecoration(labelText: 'Email'),
+              keyboardType: TextInputType.emailAddress,
             ),
             const SizedBox(height: 10),
             TextField(

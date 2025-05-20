@@ -7,41 +7,37 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white, // Matches the login/signup UI
+      backgroundColor: Colors.white,
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 30.0),
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Optional logo (remove if not used)
-              // Image.asset('assets/logo.png', height: 150),
               const SizedBox(height: 10),
 
               // App Title
               const Text(
                 'Heart2Help',
                 style: TextStyle(
-                  fontSize: 32,
+                  fontSize: 36,
                   fontWeight: FontWeight.bold,
                   color: Colors.red,
+                  letterSpacing: 1.2,
                 ),
               ),
 
-              const SizedBox(height: 10),
+              const SizedBox(height: 12),
+
+              // Motivational Quote
               const Text(
-                'Welcome to the Blood Donation App',
-                style: TextStyle(color: Colors.white),
+                '"Be the reason someone gets to live another day."',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontStyle: FontStyle.italic,
+                  color: Colors.black87,
+                ),
                 textAlign: TextAlign.center,
-              ),
-
-              const SizedBox(height: 40),
-
-              // Blood icon
-              const CircleAvatar(
-                radius: 40,
-                backgroundColor: Colors.red,
-                child: Icon(Icons.bloodtype, color: Colors.white, size: 40),
               ),
 
               const SizedBox(height: 50),
@@ -63,7 +59,14 @@ class HomePage extends StatelessWidget {
                       borderRadius: BorderRadius.circular(25),
                     ),
                   ),
-                  child: const Text('Login', style: TextStyle(fontSize: 18)),
+                  child: const Text(
+                    'Tap to Donate',
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.white, // White button text
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ),
               ),
 

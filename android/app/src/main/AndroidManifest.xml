@@ -3,6 +3,10 @@
         android:label="miniproject_blooddonation"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+        <meta-data
+    android:name="com.google.android.geo.API_KEY"
+    android:value="AIzaSyALUeXP5Z6k7h2n-JehumTM_sz-m8ccx2A" />
+
         <activity
             android:name=".MainActivity"
             android:exported="true"

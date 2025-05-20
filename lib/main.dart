@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+
+// Screens
 import 'screens/home_page.dart';
 import 'screens/dashboard_page.dart';
 import 'screens/login_page.dart';
 import 'screens/signup_page.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {

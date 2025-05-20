@@ -4,37 +4,35 @@ import 'dart:convert';
 class AuthService {
   // Define the login method
   static Future<Map<String, dynamic>> login(
-    String email,
-    String password,
-  ) async {
-    final url = Uri.parse(
-      'http://localhost:5000/api/auth/login',
-    ); // Replace with your backend API URL
+  String email,
+  String password,
+) async {
+  final url = Uri.parse('http://localhost:5000/api/auth/login');
 
-    // Prepare data to be sent as a map
-    Map<String, String> loginData = {'email': email, 'password': password};
+  Map<String, String> loginData = {'email': email, 'password': password};
 
-    try {
-      final response = await http.post(
-        url,
-        headers: {'Content-Type': 'application/json'},
-        body: json.encode(loginData), // Convert Map to JSON
-      );
+  try {
+    final response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: json.encode(loginData),
+    );
 
-      if (response.statusCode == 200) {
-        // Assuming the response body is JSON containing a 'message'
-        Map<String, dynamic> responseBody = json.decode(response.body);
+    if (response.statusCode == 200) {
+      Map<String, dynamic> responseBody = json.decode(response.body);
 
-        return responseBody; // Return the response body
-      } else {
-        // Handle unsuccessful response (e.g., statusCode != 200)
-        return {'message': 'Login failed: ${response.statusCode}'};
-      }
-    } catch (error) {
-      // Handle network or other errors
-      return {'message': 'Error: $error'};
+      // Merge 'message' and 'user' into one map
+      return {
+        'message': responseBody['message'],
+        ...responseBody['user'], // Flatten the user object
+      };
+    } else {
+      return {'message': 'Login failed: ${response.statusCode}'};
     }
+  } catch (error) {
+    return {'message': 'Error: $error'};
   }
+}
 
   // Define the signup method
   static Future<Map<String, dynamic>> signup(
@@ -73,7 +71,7 @@ class AuthService {
       if (response.statusCode == 200) {
         // Assuming the response body is JSON containing a 'message'
         Map<String, dynamic> responseBody = json.decode(response.body);
-
+        
         return responseBody; // Return the response body
       } else {
         // Handle unsuccessful response (e.g., statusCode != 200)
